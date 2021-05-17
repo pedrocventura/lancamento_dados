@@ -1,32 +1,3 @@
-<?php
-
-$joga = $_GET['lancar'] ? true : false;
-
-function calculaGanhador($pc,$jogador){
-    switch(true){
-        case $pc == $jogador:
-            return "Empate";
-            break;
-        case $pc > $jogador: 
-            return "Computador";
-            break;
-        case $pc < $jogador: 
-            return "Jogador";
-            break;
-    }
-}
-function jogaDado() {
-    return random_int(1,6);
-}
-
-if($joga){
-$D1Jogador= jogaDado();
-$D2Jogador= jogaDado();
-$D1Pc= jogaDado();
-$D2Pc= jogaDado();
-$ganhador = calculaGanhador($D1Pc + $D2Pc,$D1Jogador + $D2Jogador);
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,42 +8,93 @@ $ganhador = calculaGanhador($D1Pc + $D2Pc,$D1Jogador + $D2Jogador);
     <title>Lançamento de dados</title>
 </head>
 <style>
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+
+    td,
+    th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
 </style>
+
 <body>
-    <button><a href="php.php?lancar=true">Lançar</a></button>
-    <?php if($joga){ ?>
+    <button id="btnJogar">Jogar</button>
     <table>
         <tr>
-        <th></th>
+            <th></th>
             <th>Jogador</th>
             <th>Computador</th>
         </tr>
 
         <tr>
             <td>1º Dado</td>
-            <td><?= $D1Jogador?></td>
-            <td> <?= $D1Pc?></td>
+            <td id="d1Jog"></td>
+            <td id="d1Pc"></td>
         </tr>
         <tr>
             <td>2º Dado</td>
-            <td> <?= $D2Jogador?></td>
-            <td> <?= $D2Pc?></td>
+            <td id="d2Jog"></td>
+            <td id="d2Pc"></td>
         </tr>
         <tr>
             <td>Soma</td>
-            <td><?= $D1Jogador + $D2Jogador?></td>
-            <td><?= $D1Pc + $D2Pc?></td>
+            <td id="somajg"></td>
+            <td id="somapc"></td>
         </tr>
     </table>
-    <h4>Ganhador:  <?= $ganhador?></h4>
+    <h4 id="ganhador"></h4>
 </body>
-<?php } ?>
+
 </html>
+
+<script>
+    const btn = document.getElementById("btnJogar"),
+        d1j = document.getElementById("d1Jog"),
+        d2j = document.getElementById("d2Jog"),
+        d1p = document.getElementById("d1Pc"),
+        d2p = document.getElementById("d2Pc"),
+        somajog = document.getElementById("somajg"),
+        somapc = document.getElementById("somapc"),
+        ganhador = document.getElementById("ganhador");
+
+    btn.onclick = function() {
+        let usrDados = [randomNumber(1, 6), randomNumber(1, 6)],
+            pcDados = [randomNumber(1, 6), randomNumber(1, 6)],
+            usrSoma,
+            pcSoma;
+
+        d1j.innerHTML = usrDados[0];
+        d2j.innerHTML = usrDados[1];
+        d1p.innerHTML = pcDados[0];
+        d2p.innerHTML = pcDados[1];
+
+        usrSoma = arrSum(usrDados);
+        pcSoma = arrSum(pcDados);
+
+        somajog.innerHTML = usrSoma;
+        somapc.innerHTML = pcSoma;
+
+        if (usrSoma > pcSoma) {
+            ganhador.innerHTML = "Usuário!"
+        } else if (usrSoma == pcSoma) {
+            ganhador.innerHTML = "Empate"
+        } else {
+            ganhador.innerHTML = "Computador!"
+        }
+
+
+    }
+
+    const randomNumber = function(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    };
+
+    const arrSum = function(arr) {
+        return arr.reduce(function(a, b) {
+            return a + b
+        }, 0);
+    }
+</script>
